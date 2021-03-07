@@ -2,7 +2,7 @@
 Description=Maotai Bot Service
 
 [Service]
-ExecStart=/home/pi/py3/bin/python /home/pi/MaotaiWangWangBot/bot.py -c /home/pi/admin.config/maotaiwangwangbot
+ExecStart=/home/pi/py3/bin/python /home/pi/MaotaiWangWangBot/adminbot.py -c /home/pi/admin.config/maotaiwangwangbot
 Restart=on-failure
 Type=notify
 
