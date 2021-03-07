@@ -10,6 +10,16 @@
 - [x] /showcmd 显示已经设置的可执行cmd，显示出的格式与setcmd 的格式相同
 - [x] /admin  列出可以执行的cmd，按button，用以执行对应的cmd
 
+### 配置文件
+
+配置文件为 `config.json`
+
+```
+{
+    "Token": "YOUR_TOKEN",
+    "Admin":[ USER_ID,USER_ID ]
+}
+```
 
 ## 安装
 
