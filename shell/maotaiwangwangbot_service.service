@@ -1,0 +1,10 @@
+[Unit]
+Description=Maotai Bot Service
+
+[Service]
+ExecStart=/home/pi/py3/bin/python /home/pi/MaotaiWangWangBot/bot.py -c /home/pi/admin.config/maotaiwangwangbot
+Restart=on-failure
+Type=notify
+
+[Install]
+WantedBy=default.target

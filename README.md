@@ -23,9 +23,12 @@
 
 ## 安装
 
+编辑 maotaiwangwangbot_service.service 中的python路径和adminbot.py的路径后安装service。
+
 ```
+python -m venv py3
 mkdir -p ~/.config/systemd/user
-cp shell/maotaibot_service.service ~/.config/systemd/user
+cp shell/maotaiwangwangbot_service.service ~/.config/systemd/user
 systemctl --user daemon-reload
 sudo loginctl enable-linger $USER
 systemctl --user start maotaiwangwangbot_service
