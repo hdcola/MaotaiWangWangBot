@@ -9,50 +9,11 @@ from json import loads
 from utils import check_admin_permission
 
 
-# cmds = [
-#     {
-#         "admin:update":"更新",
-#         "admin:restart":"重启",
-#         "admin:status":"状态"
-#     },{
-#         "admin:help":"帮助"
-#     }
-# ]
-
 def _help_command(query=None):
     msg = """
     只有管理员才能操作哦
     """
     return msg
-
-
-# def _update_command(query):
-#     shell=config.CONFIG['Admin_path'] + '/update.sh > /tmp/gitpull.txt'
-#     os.system(shell)
-#     msg = "反回信息:\n" + open("/tmp/gitpull.txt").read()
-#     query.answer("更新代码")
-#     return msg
-
-# def _restart_command(query):
-#     shell=config.CONFIG['Admin_path'] + '/restart.sh > /tmp/restart.txt'
-#     os.system(shell)
-#     msg = "反回信息:\n" + open("/tmp/restart.txt").read()
-#     query.answer("重启服务")
-#     return msg
-
-# def _status_command(query):
-#     shell=config.CONFIG['Admin_path'] + '/status.sh > /tmp/status.txt'
-#     os.system(shell)
-#     msg = "反回信息:\n" + open("/tmp/status.txt").read()
-#     query.answer("获取状态")
-#     return msg
-
-
-# def _get_shellname(shell):
-#     _tmp = shell.split('.sh')[0]
-#     _tmp = f"{_tmp}.sh".split('/')
-#     _tmp = _tmp[-1]
-#     return _tmp.split('.')[0]
 
 
 def _parse_long_msg(msg):
