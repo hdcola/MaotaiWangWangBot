@@ -69,7 +69,7 @@ def init_reply_buttons():
 
 
 def admin_cmd(update: Updater, context: CallbackContext):
-    if check_admin_permission(update.effective_chat.id):
+    if check_admin_permission(update.effective_user.id):
         msg = _help_command()
         update.message.reply_text(msg, reply_markup=init_reply_buttons())
     else:
@@ -77,7 +77,7 @@ def admin_cmd(update: Updater, context: CallbackContext):
 
 
 def set_cmd(update: Updater, context: CallbackContext):
-    if check_admin_permission(update.effective_chat.id):
+    if check_admin_permission(update.effective_user.id):
         if len(update.effective_message.text.split("/setcmd ")) < 2:
             update.effective_message.reply_text("格式为 /setcmd [['abc','shell'],['abc','shell']]")
             return
@@ -89,7 +89,7 @@ def set_cmd(update: Updater, context: CallbackContext):
 
 
 def show_cmd(update:Updater, context:CallbackContext):
-    if check_admin_permission(update.effective_chat.id):
+    if check_admin_permission(update.effective_user.id):
         cmds = config.get_cmd()
         def _format_cmd(cmd):
             if not cmd:
