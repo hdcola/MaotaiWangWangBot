@@ -31,8 +31,8 @@ def _parse_command(query, shell):
     # 为了方便查看执行结果，提取出shell文件名，用以保存执行结果
     _shell = f"{shell} > /tmp/adminbot.txt 2>&1"
     os.system(_shell)
-    msg = "反回信息:\n" + open(f"/tmp/adminbot.txt").read()
-    query.answer("{query} runing...")
+    msg = "返回信息:\n" + open(f"/tmp/adminbot.txt").read()
+    query.answer(f"{shell} runing...")
     return msg
     
 
