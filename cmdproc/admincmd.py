@@ -36,18 +36,18 @@ def _parse_command(query, shell):
     return msg
     
 
-
 def admin_command_callback(update: Updater, context: CallbackContext):
     query = update.callback_query
     if not check_admin_permission(query.from_user.id):
         query.answer("兄弟，这个按钮你不能按哟",show_alert=True)
         return 
-    if query.data != "help":
-        msg = _parse_command(query, query.data)
+    if query.data != "admin:help":
+        msg = _parse_command(query, query.data.split("admin:")[1])
         
     else:
         msg = _help_command()
     if msg.strip() != query.message.text.strip():
+        
         msgs = _parse_long_msg(msg)
 
         # msgs 里存储的是切分后的信息段，暂时只显示最后一段数据
@@ -60,11 +60,11 @@ def init_reply_buttons():
     button = []
     for cmd in cmds:
         key, shell = cmd 
-        button.append(InlineKeyboardButton(key, callback_data=shell))
+        button.append(InlineKeyboardButton(key, callback_data=f"admin:{shell}"))
     
     buttons.append(button)
 
-    buttons.append([InlineKeyboardButton("help", callback_data="help")])
+    buttons.append([InlineKeyboardButton("help", callback_data="admin:help")])
     return InlineKeyboardMarkup(buttons)
 
 
@@ -110,6 +110,6 @@ def add_dispatcher(dp: Dispatcher):
     # showcmd 列出现有的name:shell ，主要是为了复制用来设置
     dp.add_handler(CommandHandler("showcmd", show_cmd))
 
-    dp.add_handler(CallbackQueryHandler(admin_command_callback,pattern="^[A-Za-z0-9_]*"))
+    dp.add_handler(CallbackQueryHandler(admin_command_callback,pattern="^admin:[A-Za-z0-9_]*"))
     return [BotCommand('admin','管理服务器'),BotCommand('setcmd','设置管理命令'),BotCommand('showcmd','查看管理命令')]
 
