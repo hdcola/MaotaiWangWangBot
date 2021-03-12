@@ -19,47 +19,81 @@ MAX_ZY_NUM = 7
 
 """
 zy 格式设计
+为了应对未来可能有的查某个人的所有作业情况，加入 uid作为key，方便快速检索
 {
-    "UID": uid,
-    "FirstName": firstname,
-    "ZY": [
-        {
-            "DATETIME": datetime1,
-            "MESSAGEID": messageid1
-        },
-        {
-            "DATETIME": datetime2,
-            "MESSAGEID": messageid2
-        }
-    ]
+    uid1：
+    {
+        "UID": uid1,
+        "FirstName": firstname,
+        "ZY": [
+            {
+                "DATETIME": datetime1,
+                "MESSAGEID": messageid1
+            },
+            {
+                "DATETIME": datetime2,
+                "MESSAGEID": messageid2
+            }
+        ]
+    }
+    uid2:
+    {
+        "UID": uid2,
+        "FirstName": firstname,
+        "ZY": [
+            {
+                "DATETIME": datetime1,
+                "MESSAGEID": messageid1
+            },
+            {
+                "DATETIME": datetime2,
+                "MESSAGEID": messageid2
+            }
+        ]
+    }
 }
 """
-def load_zy(uid):
 
-    zys = {}
 
-    # load 某人的作业
-    zy_filepath = os.path.join(os.path.expanduser(ZY_PATH), f"{uid}.json")
+
+def load_all_zy():
+    """
+    load zy.config, 获取所有人的作业
+    """
+    zy_filepath = os.path.join(os.path.expanduser(ZY_PATH), f"zy.json")
     if not os.path.exists(zy_filepath):
-        return zys
-    
-    with open(zy_filepath, 'r') as zyfile:
-        zys = load( zyfile )
-    return zys
+        return {}
+    else:
+        with open(zy_filepath, 'r') as zyfile:
+            return load( zyfile )
 
 
-
-def save_zy(uid, zys):
-
+def _save_all_zy(zys):
+    """
+    存储所有人的作业到 zy.config
+    """
     zy_path = os.path.dirname(os.path.expanduser(ZY_PATH))
     if not os.path.exists(zy_path):
         os.makedirs(zy_path, exist_ok=True)
-
-    # save 某人的作业
-    zy_filepath = os.path.join(zy_path, f"{uid}.json")
+    
+    zy_filepath = os.path.join(zy_path, f"zy.json")
     with open(zy_filepath, 'w') as zyfile:
         dump(zys, zyfile, indent=4, ensure_ascii=False)
 
+
+
+
+def load_zy(uid):
+    # load 某人的作业
+    all_zys = load_all_zy()
+    return all_zys.get(str(uid), {})
+
+
+def save_zy(uid, zys):
+    # 存某人的作业
+    all_zys = load_all_zy()
+    all_zys[str(uid)] = zys
+    _save_all_zy(all_zys)
 
 
 

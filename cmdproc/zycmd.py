@@ -1,3 +1,5 @@
+import os
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, BotCommand
 from telegram.ext import Updater, Dispatcher, CommandHandler, CallbackQueryHandler, CallbackContext
 
@@ -73,7 +75,35 @@ def zy_cmd(update: Updater, context: CallbackContext):
 
 
 def lzy_cmd(update: Updater, context: CallbackContext):
-    pass
+    """
+    获取所有人当前，或者某个具体日子的作业。
+    日期格式MMDD
+    """
+    _datetime = datetime.now().strftime("%m%d")
+    _command = update.effective_message.text.split("/lzy ")
+    if len(_command) > 1:
+        _datetime = _command[1].strip()
+    if len(_datetime) != 4:
+        update.effective_message.reply_text("命令格式输入错误，请使用 /lzy MMDD 的形式查询哦")
+        return
+    
+    all_zys = config.load_all_zy()
+    result = []
+    print(all_zys)
+    for uid, zy in all_zys.items():
+        for _zy in zy.get('ZY', []):
+            if _zy['DATETIME'] == _datetime:
+                result.append([zy['FirstName'], _zy['MESSAGEID']])
+
+    
+    res =  os.linesep.join(map(lambda x: f"{x[0]}, {x[1]}", result))
+    if not res:
+        res = f"{_datetime}这一天没有人交作业哦"
+        
+    update.effective_message.reply_text(res)
+    
+    
+
 
 def kzy_cmd(update: Updater, context: CallbackContext):
     pass
@@ -87,5 +117,5 @@ def add_dispatcher(dp: Dispatcher):
     dp.add_handler(CommandHandler("kzy", kzy_cmd))
 
     # dp.add_handler(CallbackQueryHandler(admin_command_callback,pattern="^zy:[A-Za-z0-9_]*"))
-    return [BotCommand('zy','交作业')]
+    return [BotCommand('zy','交作业'), BotCommand('lzy', '查作业')]
 
