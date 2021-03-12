@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from cmdproc import zycmd
-from cmdproc.zycmd import zy_cmd
 from telegram.ext import Updater
 import mysystemd
 import os
