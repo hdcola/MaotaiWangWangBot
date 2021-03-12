@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from cmdproc import zycmd
+from cmdproc.zycmd import zy_cmd
 from telegram.ext import Updater
 import mysystemd
 import os
@@ -48,6 +50,7 @@ if __name__ == '__main__':
     # 在这里加入功能
     from cmdproc import admincmd
     commands += admincmd.add_dispatcher(dispatcher)
+    commands += zycmd.add_dispatcher(dispatcher)
 
     updater.bot.set_my_commands(commands)
 

@@ -12,6 +12,57 @@ config_file = ""
 config_path = "~/.config/maotaibot/"
 run_path = os.path.split(os.path.realpath(__file__))[0]
 
+ZY_PATH = "~/.config/zy/"
+MAX_ZY_NUM = 7
+
+
+
+"""
+zy 格式设计
+{
+    "UID": uid,
+    "FirstName": firstname,
+    "ZY": [
+        {
+            "DATETIME": datetime1,
+            "MESSAGEID": messageid1
+        },
+        {
+            "DATETIME": datetime2,
+            "MESSAGEID": messageid2
+        }
+    ]
+}
+"""
+def load_zy(uid):
+
+    zys = {}
+
+    # load 某人的作业
+    zy_filepath = os.path.join(os.path.expanduser(ZY_PATH), f"{uid}.json")
+    if not os.path.exists(zy_filepath):
+        return zys
+    
+    with open(zy_filepath, 'r') as zyfile:
+        zys = load( zyfile )
+    return zys
+
+
+
+def save_zy(uid, zys):
+
+    zy_path = os.path.dirname(os.path.expanduser(ZY_PATH))
+    if not os.path.exists(zy_path):
+        os.makedirs(zy_path, exist_ok=True)
+
+    # save 某人的作业
+    zy_filepath = os.path.join(zy_path, f"{uid}.json")
+    with open(zy_filepath, 'w') as zyfile:
+        dump(zys, zyfile, indent=4, ensure_ascii=False)
+
+
+
+
 CONFIG = {}
 
 def load_config():

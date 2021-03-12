@@ -9,7 +9,7 @@
 - [x] `/setcmd` 设置可以执行的cmd，格式方便读取就好，也许是 `[[name,shell],[name,shell]....]` ，它会存到config.json中去
 - [x] `/showcmd` 显示已经设置的可执行cmd，显示出的格式与setcmd 的格式相同
 - [x] `/admin`  列出可以执行的cmd，按button，用以执行对应的cmd
-- [ ] `/zy` 记录下一个人提交的作业到一个单独的json文件里，需要记录下 uid/FirstName/日期/messageid。记录过去七天的历史，超过的历史在存时去除掉。
+- [x] `/zy` 记录下一个人提交的作业到一个单独的json文件里，需要记录下 uid/FirstName/日期/messageid。记录过去七天的历史，超过的历史在存时去除掉。
 - [ ] `/lzy` 或 `/lzy MMDD` 列出当天或指定日期交的作业，每行一个 FirstName messagelink
 - [ ] `/kzy` 将过去N天没有交作业的从指定的[chatid,chatid]里踢除，配置存在config.json里
 
