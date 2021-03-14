@@ -48,7 +48,7 @@ if __name__ == '__main__':
     commands = []
     # 在这里加入功能
     from cmdproc import admincmd
-    commands += admincmd.add_dispatcher(dispatcher)
+    commands += zycmd.add_dispatcher(dispatcher)
 
     updater.bot.set_my_commands(commands)
 
