@@ -36,11 +36,14 @@ def zy_cmd(update: Updater, context: CallbackContext):
     uid = update.effective_user.id
     message = update.effective_message
 
-    if not message.reply_to_message :
-        update.effective_message.reply_text("同学，你需要使用 /zy 回复你的作业(作业应该是一个图片或文件)，用于提交作业哦")
+    if message.reply_to_message == None:
+        update.effective_message.reply_text("同学，你需要使用 /zy 回复你的作业，用于提交作业哦")
         return
     
-    if (not message.reply_to_message.photo) or (not message.reply_to_message.document):
+    print(message.reply_to_message.photo)
+    print(message.reply_to_message.document)
+
+    if message.reply_to_message.photo == None and message.reply_to_message.document == None:
         update.effective_message.reply_text("同学，你需要使用 /zy 回复你的作业(作业应该是一个图片或文件)，用于提交作业哦")
         return
 
