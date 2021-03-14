@@ -108,7 +108,7 @@ def lzy_cmd(update: Updater, context: CallbackContext):
                 result.append([zy['FirstName'], _zy['MESSAGEID']])
 
     
-    res =  os.linesep.join(map(lambda x: f"{x[0]}, {x[1]}", result))
+    res =  os.linesep.join(map(lambda x: f"{x[0]}: {x[1]}", result))
     if not res:
         res = f"{_datetime}这一天没有人交作业哦"
         
