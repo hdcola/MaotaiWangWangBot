@@ -71,7 +71,7 @@ def _save_all_zy(zys):
     """
     存储所有人的作业到 zy.config
     """
-    zy_path = os.path.dirname(os.path.expanduser(config_path))
+    zy_path = os.path.expanduser(config_path)
     if not os.path.exists(zy_path):
         os.makedirs(zy_path, exist_ok=True)
     
