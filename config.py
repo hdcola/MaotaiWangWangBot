@@ -12,7 +12,6 @@ config_file = ""
 config_path = "~/.config/maotaibot/"
 run_path = os.path.split(os.path.realpath(__file__))[0]
 
-ZY_PATH = "~/.config/zy/"
 MAX_ZY_NUM = 7
 
 
@@ -60,7 +59,7 @@ def load_all_zy():
     """
     load zy.config, 获取所有人的作业
     """
-    zy_filepath = os.path.join(os.path.expanduser(ZY_PATH), f"zy.json")
+    zy_filepath = os.path.join(os.path.expanduser(config_path), f"zy.json")
     if not os.path.exists(zy_filepath):
         return {}
     else:
@@ -72,7 +71,7 @@ def _save_all_zy(zys):
     """
     存储所有人的作业到 zy.config
     """
-    zy_path = os.path.dirname(os.path.expanduser(ZY_PATH))
+    zy_path = os.path.dirname(os.path.expanduser(config_path))
     if not os.path.exists(zy_path):
         os.makedirs(zy_path, exist_ok=True)
     
