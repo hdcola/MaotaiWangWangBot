@@ -98,7 +98,7 @@ def lzy_cmd(update: Updater, context: CallbackContext):
     
     all_zys = config.load_all_zy()
     result = []
-    print(all_zys)
+    # print(all_zys)
     for uid, zy in all_zys.items():
         for _zy in zy.get('ZY', []):
             if _zy['DATETIME'] == _datetime:
