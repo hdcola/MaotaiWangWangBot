@@ -1,6 +1,6 @@
 import os
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, BotCommand
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, BotCommand, Message
 from telegram.ext import Updater, Dispatcher, CommandHandler, CallbackQueryHandler, CallbackContext
 
 import config
@@ -33,9 +33,18 @@ def add_zy(zys, zy):
 
 
 def zy_cmd(update: Updater, context: CallbackContext):
-    
     uid = update.effective_user.id
-    _messageid = update.effective_message.message_id
+    message = update.effective_message
+
+    if not message.reply_to_message :
+        update.effective_message.reply_text("同学，你需要使用 /zy 回复你的作业(作业应该是一个图片或文件)，用于提交作业哦")
+        return
+    
+    if (not message.reply_to_message.photo) or (not message.reply_to_message.document):
+        update.effective_message.reply_text("同学，你需要使用 /zy 回复你的作业(作业应该是一个图片或文件)，用于提交作业哦")
+        return
+
+    _messageid = update.effective_message.reply_to_message.message_id
     chatid = str(update.effective_chat.id)
     firstname = update.effective_user.first_name
     messageid = f"https://t.me/c/{chatid[4:]}/{_messageid}"
@@ -101,9 +110,6 @@ def lzy_cmd(update: Updater, context: CallbackContext):
         res = f"{_datetime}这一天没有人交作业哦"
         
     update.effective_message.reply_text(res)
-    
-    
-
 
 def kzy_cmd(update: Updater, context: CallbackContext):
     pass
@@ -117,5 +123,5 @@ def add_dispatcher(dp: Dispatcher):
     dp.add_handler(CommandHandler("kzy", kzy_cmd))
 
     # dp.add_handler(CallbackQueryHandler(admin_command_callback,pattern="^zy:[A-Za-z0-9_]*"))
-    return [BotCommand('zy','交作业'), BotCommand('lzy', '查作业')]
+    return [BotCommand('zy','使用/zy回复你的作业后交作业'), BotCommand('lzy', '查看当天交的作业列表')]
 
