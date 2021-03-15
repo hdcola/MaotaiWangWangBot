@@ -10,8 +10,6 @@ from utils import check_admin_permission
 from datetime import datetime
 
 
-
-
 def add_zy(zys, zy):
     """
     add zy to zys 
@@ -23,27 +21,30 @@ def add_zy(zys, zy):
         if _zy.get('DATETIME') == zy.get('DATETIME'):
             _zy['MESSAGEID'] = zy.get('MESSAGEID')
             return zys
-    
+
     if len(zys) == config.MAX_ZY_NUM:
         zys = zys[1:]
-    zys.append( zy )
+    zys.append(zy)
 
     return zys
 
 
-
 def zy_cmd(update: Updater, context: CallbackContext):
+
     uid = update.effective_user.id
     message = update.effective_message
 
     if message.reply_to_message == None:
         update.effective_message.reply_text("同学，你需要使用 /zy 回复你的作业，用于提交作业哦")
         return
-    
+    elif message.reply_to_message.from_user.id != message.from_user.id:
+        update.effective_message.reply_text("对不起同学，你只能提交自己的作业哦！")
+        return
+
     print(message.reply_to_message.photo)
     print(message.reply_to_message.document)
 
-    if message.reply_to_message.photo == None and message.reply_to_message.document == None:
+    if message.reply_to_message.photo == [] and message.reply_to_message.document == None:
         update.effective_message.reply_text("同学，你需要使用 /zy 回复你的作业(作业应该是一个图片或文件)，用于提交作业哦")
         return
 
@@ -59,22 +60,17 @@ def zy_cmd(update: Updater, context: CallbackContext):
         zys = {
             "UID": uid,
             "FirstName": firstname,
-            "ZY": [
-                {
-                    "DATETIME": datetime.today().strftime("%m%d"),
-                    "MESSAGEID": messageid
-                },
-            ]
+            "ZY": [{
+                "DATETIME": datetime.today().strftime("%m%d"),
+                "MESSAGEID": messageid
+            }, ]
         }
         config.save_zy(uid, zys)
 
-    else: 
+    else:
         _zys = zys.setdefault("ZY", [])
 
-        _zy = {
-            "DATETIME": datetime.now().strftime("%m%d"),
-            "MESSAGEID": messageid
-        }
+        _zy = {"DATETIME": datetime.now().strftime("%m%d"), "MESSAGEID": messageid}
 
         # 添加作业
         _zys = add_zy(_zys, _zy)
@@ -98,7 +94,7 @@ def lzy_cmd(update: Updater, context: CallbackContext):
     if len(_datetime) != 4:
         update.effective_message.reply_text("命令格式输入错误，请使用 /lzy MMDD 的形式查询哦")
         return
-    
+
     all_zys = config.load_all_zy()
     result = []
     # print(all_zys)
@@ -107,24 +103,24 @@ def lzy_cmd(update: Updater, context: CallbackContext):
             if _zy['DATETIME'] == _datetime:
                 result.append([zy['FirstName'], _zy['MESSAGEID']])
 
-    
-    res =  os.linesep.join(map(lambda x: f"{x[0]}: {x[1]}", result))
+    res = os.linesep.join(map(lambda x: f"{x[0]}: {x[1]}", result))
     if not res:
         res = f"{_datetime}这一天没有人交作业哦"
-        
+
     update.effective_message.reply_text(res)
+
 
 def kzy_cmd(update: Updater, context: CallbackContext):
     pass
 
+
 def add_dispatcher(dp: Dispatcher):
     # /zy 交作业
-    dp.add_handler(CommandHandler("zy",zy_cmd))
+    dp.add_handler(CommandHandler("zy", zy_cmd))
     # /lzy 列出当天交的作业
     dp.add_handler(CommandHandler("lzy", lzy_cmd))
     # /kzy 列出所有的人交作业的情况，通过按钮来决定踢出一个没交作业的人
     dp.add_handler(CommandHandler("kzy", kzy_cmd))
 
     # dp.add_handler(CallbackQueryHandler(admin_command_callback,pattern="^zy:[A-Za-z0-9_]*"))
-    return [BotCommand('zy','使用/zy回复你的作业后交作业'), BotCommand('lzy', '查看当天交的作业列表')]
-
+    return [BotCommand('zy', '使用/zy回复你的作业后交作业'), BotCommand('lzy', '查看当天交的作业列表')]
