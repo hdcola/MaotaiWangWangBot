@@ -125,7 +125,7 @@ def set_default():
     CONFIG.setdefault("Admin_path","")  #Admin Shell Path
     save_config()
 
-def get_admin_chatids():
+def get_admin_uids():
     if not CONFIG:
         load_config()
     return CONFIG.get("Admin", [])

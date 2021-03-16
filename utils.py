@@ -3,9 +3,10 @@
 import config
 
 
-def check_admin_permission(chatid):
-    admin_chatids = config.get_admin_chatids()
-    if chatid not in admin_chatids:
+def check_admin_permission(uid):
+    # 检查uid是否为管理员 
+    admin_uids = config.get_admin_uids()
+    if uid not in admin_uids:
         return False
     else:
         return True
