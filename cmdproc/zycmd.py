@@ -88,9 +88,8 @@ def lzy_cmd(update: Updater, context: CallbackContext):
     日期格式MMDD
     """
     _datetime = datetime.now().strftime("%m%d")
-    _command = update.effective_message.text.split("/lzy ")
-    if len(_command) > 1:
-        _datetime = _command[1].strip()
+    if len(context.args) > 0:
+        _datetime = context.args[0].strip()
     if len(_datetime) != 4:
         update.effective_message.reply_text("命令格式输入错误，请使用 /lzy MMDD 的形式查询哦")
         return
