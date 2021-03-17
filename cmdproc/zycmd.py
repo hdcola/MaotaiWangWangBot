@@ -128,8 +128,18 @@ def dzy_cmd(update: Updater, context: CallbackContext):
             update.effective_message.reply_text("请输入 /dzy [MMDD]")
 
 def kzy_cmd(update: Updater, context: CallbackContext):
-    pass
-
+    all_zys = config.load_all_zy()
+    zys = []
+    for uid, zy in all_zys.items():
+        uzy = zy['FirstName']
+        for _zy in zy.get('ZY', []):
+            uzy += f" {_zy['DATETIME']} "
+        zys.append(uzy)
+    
+    rmsg = "作业爬行榜:\n"
+    for zy in zys:
+        rmsg += f"{zy}\n"
+    update.effective_message.reply_text(rmsg)
 
 def add_dispatcher(dp: Dispatcher):
     # /zy 交作业
