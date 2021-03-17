@@ -3,7 +3,7 @@ import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, BotCommand, Message
 from telegram.ext import Updater, Dispatcher, CommandHandler, CallbackQueryHandler, CallbackContext
 
-import config
+import config,utils
 from json import loads
 from utils import check_admin_permission
 
@@ -40,9 +40,6 @@ def zy_cmd(update: Updater, context: CallbackContext):
     elif message.reply_to_message.from_user.id != message.from_user.id:
         update.effective_message.reply_text("对不起同学，你只能提交自己的作业哦！")
         return
-
-    print(message.reply_to_message.photo)
-    print(message.reply_to_message.document)
 
     if message.reply_to_message.photo == [] and message.reply_to_message.document == None:
         update.effective_message.reply_text("同学，你需要使用 /zy 回复你的作业(作业应该是一个图片或文件)，用于提交作业哦")
@@ -109,6 +106,27 @@ def lzy_cmd(update: Updater, context: CallbackContext):
     update.effective_message.reply_text(res)
 
 
+def dzy_cmd(update: Updater, context: CallbackContext):
+    uid = update.effective_user.id
+    if utils.check_admin_permission(uid):
+        if len(context.args) == 1:
+            all_zys = config.load_all_zy()
+            messg = ""
+            msgid = context.args[0]
+            for uid, zy in all_zys.items():
+                for _zy in zy.get('ZY', []):
+                    mid = _zy['MESSAGEID'].split("/")[-1]
+                    if mid == msgid:
+                        messg += f"{uid}: {_zy['MESSAGEID']} 已经清除\n"
+                        all_zys[uid]['ZY'].remove(_zy)
+            config._save_all_zy(all_zys)
+            if messg == "":
+                update.effective_message.reply_text("没有找到这个作业哦~")
+            else:
+                update.effective_message.reply_text(messg)
+        else:
+            update.effective_message.reply_text("请输入 /dzy [MMDD]")
+
 def kzy_cmd(update: Updater, context: CallbackContext):
     pass
 
@@ -118,6 +136,8 @@ def add_dispatcher(dp: Dispatcher):
     dp.add_handler(CommandHandler("zy", zy_cmd))
     # /lzy 列出当天交的作业
     dp.add_handler(CommandHandler("lzy", lzy_cmd))
+    # /dzy [msgid] 用于删除一条作业
+    dp.add_handler(CommandHandler("dzy", dzy_cmd))
     # /kzy 列出所有的人交作业的情况，通过按钮来决定踢出一个没交作业的人
     dp.add_handler(CommandHandler("kzy", kzy_cmd))
 
