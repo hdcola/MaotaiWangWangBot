@@ -164,4 +164,4 @@ def add_dispatcher(dp: Dispatcher):
     dp.add_handler(CommandHandler("kzy", kzy_cmd))
 
     # dp.add_handler(CallbackQueryHandler(admin_command_callback,pattern="^zy:[A-Za-z0-9_]*"))
-    return [BotCommand('zy', '使用/zy回复你的作业后交作业'), BotCommand('lzy', '查看当天交的作业列表'),BotCommand('kzy', '查看当天交的作业列表')]
+    return [BotCommand('zy', '使用/zy回复你的作业后交作业'), BotCommand('lzy', '查看当天交的作业列表'),BotCommand('kzy', '作业爬行榜')]
