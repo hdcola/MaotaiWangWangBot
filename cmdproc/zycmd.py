@@ -1,6 +1,6 @@
 import os
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, BotCommand, Message
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, BotCommand, Message, TelegramError
 from telegram.ext import Updater, Dispatcher, CommandHandler, CallbackQueryHandler, CallbackContext
 
 import config,utils
@@ -128,6 +128,18 @@ def dzy_cmd(update: Updater, context: CallbackContext):
             update.effective_message.reply_text("请输入 /dzy [MMDD]")
 
 def kzy_cmd(update: Updater, context: CallbackContext):
+    if len(context.args) > 0:
+        uid = update.effective_user.id
+        if utils.check_admin_permission(uid):
+            chatid = update.effective_chat.id
+            msg = f"同学{uid}悄悄的离开了我们\n"
+            try:
+                context.bot.kick_chat_member(chatid,uid)
+                context.bot.unban_chat_member(chatid,uid)
+            except TelegramError as e:
+                msg += f"{e}\n"
+            update.effective_message.reply_text(msg)
+            return
     all_zys = config.load_all_zy()
     zys = []
     for uid, zy in all_zys.items():
