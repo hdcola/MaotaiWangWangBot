@@ -131,7 +131,7 @@ def kzy_cmd(update: Updater, context: CallbackContext):
     all_zys = config.load_all_zy()
     zys = []
     for uid, zy in all_zys.items():
-        uzy = zy['FirstName']
+        uzy = f"{zy['FirstName']}[{uid}]:"
         for _zy in zy.get('ZY', []):
             uzy += f" {_zy['DATETIME']} "
         zys.append(uzy)
@@ -152,4 +152,4 @@ def add_dispatcher(dp: Dispatcher):
     dp.add_handler(CommandHandler("kzy", kzy_cmd))
 
     # dp.add_handler(CallbackQueryHandler(admin_command_callback,pattern="^zy:[A-Za-z0-9_]*"))
-    return [BotCommand('zy', '使用/zy回复你的作业后交作业'), BotCommand('lzy', '查看当天交的作业列表')]
+    return [BotCommand('zy', '使用/zy回复你的作业后交作业'), BotCommand('lzy', '查看当天交的作业列表'),BotCommand('kzy', '查看当天交的作业列表')]
