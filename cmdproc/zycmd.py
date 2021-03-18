@@ -134,8 +134,8 @@ def kzy_cmd(update: Updater, context: CallbackContext):
             chatid = update.effective_chat.id
             msg = f"同学{uid}悄悄的离开了我们\n"
             try:
-                context.bot.kick_chat_member(chatid,uid)
-                context.bot.unban_chat_member(chatid,uid)
+                context.bot.kick_chat_member(chatid,int(context.args[0]))
+                context.bot.unban_chat_member(chatid,int(context.args[0]))
             except TelegramError as e:
                 msg += f"{e}\n"
             update.effective_message.reply_text(msg)
