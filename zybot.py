@@ -8,14 +8,16 @@ import getopt
 import sys
 import config
 
+
 def help():
     return "'bot.py -c <configpath>'"
+
 
 if __name__ == '__main__':
     PATH = os.path.dirname(os.path.expanduser("~/.config/maotaibot/"))
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:],"hc:",["config="])
+        opts, args = getopt.getopt(sys.argv[1:], "hc:", ["config="])
     except getopt.GetoptError:
         print(help())
         sys.exit(2)
@@ -24,15 +26,15 @@ if __name__ == '__main__':
         if opt == '-h':
             print(help())
             sys.exit()
-        elif opt in ("-c","--config"):
+        elif opt in ("-c", "--config"):
             PATH = arg
 
     config.config_path = PATH
-    config.config_file = os.path.join(PATH,"config.json")
+    config.config_file = os.path.join(PATH, "config.json")
     try:
         CONFIG = config.load_config()
     except FileNotFoundError:
-        print(f"config.json not found.Generate a new configuration file in {config.config_file}" )
+        print(f"config.json not found.Generate a new configuration file in {config.config_file}")
         config.set_default()
         sys.exit(2)
 
