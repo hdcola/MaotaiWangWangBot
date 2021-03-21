@@ -4,6 +4,13 @@
 
 这个项目的目的就是建立一个Bot能远程管理你的Linux、MacOS或是类似的系统。
 
+你可以使用 `/setcmd`来设置 `/admin` 出来的命令操作列表。 setcmd 后面的是一个数组，至少是一个三维数据，最外层是行，然后是行里的button，然后是['button_name','shell']这样。
+
+最终的效果如图：
+
+<img width="430" alt="image" src="https://user-images.githubusercontent.com/1254855/111917238-55b96a00-8a55-11eb-9268-42599c408931.png">
+
+
 ### 支持的命令
 
 - [x] `/setcmd` 设置可以执行的cmd，格式方便读取就好，也许是 `[[name,shell],[name,shell]....]` ，它会存到config.json中去
