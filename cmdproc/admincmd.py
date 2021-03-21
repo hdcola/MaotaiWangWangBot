@@ -55,14 +55,16 @@ def admin_command_callback(update: Updater, context: CallbackContext):
    
 
 def init_reply_buttons():
-    cmds = config.get_cmd()
+    all_cmds = config.get_cmd()
     buttons = []
-    button = []
-    for cmd in cmds:
-        key, shell = cmd 
-        button.append(InlineKeyboardButton(key, callback_data=f"admin:{shell}"))
-    
-    buttons.append(button)
+
+    for cmds in all_cmds:
+        button = []
+        for cmd in cmds:
+            key, shell = cmd 
+            button.append(InlineKeyboardButton(key, callback_data=f"admin:{shell}"))
+        
+        buttons.append(button)
 
     buttons.append([InlineKeyboardButton("help", callback_data="admin:help")])
     return InlineKeyboardMarkup(buttons)
@@ -79,7 +81,7 @@ def admin_cmd(update: Updater, context: CallbackContext):
 def set_cmd(update: Updater, context: CallbackContext):
     if check_admin_permission(update.effective_user.id):
         if len(update.effective_message.text.split("/setcmd ")) < 2:
-            update.effective_message.reply_text("格式为 /setcmd [['abc','shell'],['abc','shell']]")
+            update.effective_message.reply_text("格式为 /setcmd [['abc','shell'],['abc','shell']],[['abc','shell'],['abc','shell']]")
             return
         cmds = eval(update.effective_message.text.split("/setcmd ")[1])
         config.set_cmd(cmds)
