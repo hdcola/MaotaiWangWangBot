@@ -81,7 +81,7 @@ def admin_cmd(update: Updater, context: CallbackContext):
 def set_cmd(update: Updater, context: CallbackContext):
     if check_admin_permission(update.effective_user.id):
         if len(update.effective_message.text.split("/setcmd ")) < 2:
-            update.effective_message.reply_text("格式为 /setcmd [['abc','shell'],['abc','shell']],[['abc','shell'],['abc','shell']]")
+            update.effective_message.reply_text("格式为 /setcmd [[['abc','shell'],['abc','shell']],[['abc','shell'],['abc','shell']]]")
             return
         cmds = eval(update.effective_message.text.split("/setcmd ")[1])
         config.set_cmd(cmds)
@@ -92,13 +92,15 @@ def set_cmd(update: Updater, context: CallbackContext):
 
 def show_cmd(update:Updater, context:CallbackContext):
     if check_admin_permission(update.effective_user.id):
-        cmds = config.get_cmd()
+        all_cmds = config.get_cmd()
         def _format_cmd(cmd):
             if not cmd:
                 return ""
             name, shell = cmd
             return f'["{name}","{shell}"]'
-        msg = f"[{','.join(map(_format_cmd, cmds))}]"
+        msg = ""
+        for cmds in all_cmds:
+            msg += f"[{','.join(map(_format_cmd, cmds))}]"
         update.effective_message.reply_text(msg)
     else:
         update.message.reply_text("兄弟，这个命令你不能用哟")
