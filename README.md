@@ -19,6 +19,7 @@
 - [x] `/zy` 记录下一个人提交的作业到一个单独的json文件里，需要记录下 uid/FirstName/日期/messageid。记录过去七天的历史，超过的历史在存时去除掉。
 - [x] `/lzy` 或 `/lzy MMDD` 列出当天或指定日期交的作业，每行一个 FirstName messagelink
 - [x] `/kzy` 将过去N天没有交作业的从指定的[chatid,chatid]里踢除，配置存在config.json里
+- [x] `zy` 支持在config中配置zychat:[chatid, chatid], 不同chat的作业，分开进行存放。
 
 ### 配置文件
 

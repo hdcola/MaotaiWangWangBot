@@ -55,11 +55,11 @@ zy 格式设计
 
 
 
-def load_all_zy():
+def load_all_zy(chatid):
     """
-    load zy.config, 获取所有人的作业
+    load chatid.zy.config, 获取所有人的作业
     """
-    zy_filepath = os.path.join(os.path.expanduser(config_path), f"zy.json")
+    zy_filepath = os.path.join(os.path.expanduser(config_path), f"{chatid}.zy.json")
     if not os.path.exists(zy_filepath):
         return {}
     else:
@@ -67,32 +67,30 @@ def load_all_zy():
             return load( zyfile )
 
 
-def _save_all_zy(zys):
+def _save_all_zy(chatid, zys):
     """
-    存储所有人的作业到 zy.config
+    存储所有人的作业到 chatid.zy.config
     """
     zy_path = os.path.expanduser(config_path)
     if not os.path.exists(zy_path):
         os.makedirs(zy_path, exist_ok=True)
     
-    zy_filepath = os.path.join(zy_path, f"zy.json")
+    zy_filepath = os.path.join(zy_path, f"{chatid}.zy.json")
     with open(zy_filepath, 'w') as zyfile:
         dump(zys, zyfile, indent=4, ensure_ascii=False)
 
 
-
-
-def load_zy(uid):
-    # load 某人的作业
-    all_zys = load_all_zy()
+def load_zy(chatid, uid):
+    # load chatid 里 uid的作业
+    all_zys = load_all_zy(chatid)
     return all_zys.get(str(uid), {})
 
 
-def save_zy(uid, zys):
+def save_zy(chatid, uid, zys):
     # 存某人的作业
-    all_zys = load_all_zy()
+    all_zys = load_all_zy(chatid)
     all_zys[str(uid)] = zys
-    _save_all_zy(all_zys)
+    _save_all_zy(chatid, all_zys)
 
 
 
@@ -139,3 +137,9 @@ def get_cmd():
     cmds = CONFIG.setdefault("CMDS", [])
     return cmds
     
+
+# 获取所有可以交作业的chat
+def get_zychats():
+    if not CONFIG:
+        load_config()
+    return CONFIG.get("zychat", [])

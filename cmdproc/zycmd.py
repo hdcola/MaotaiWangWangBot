@@ -3,9 +3,9 @@ import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, BotCommand, Message, TelegramError
 from telegram.ext import Updater, Dispatcher, CommandHandler, CallbackQueryHandler, CallbackContext
 
-import config,utils
+import config, utils
 from json import loads
-from utils import check_admin_permission
+from utils import check_zy_chat
 
 from datetime import datetime
 
@@ -28,7 +28,7 @@ def add_zy(zys, zy):
 
     return zys
 
-
+@check_zy_chat
 def zy_cmd(update: Updater, context: CallbackContext):
 
     uid = update.effective_user.id
@@ -46,11 +46,12 @@ def zy_cmd(update: Updater, context: CallbackContext):
         return
 
     _messageid = update.effective_message.reply_to_message.message_id
-    chatid = str(update.effective_chat.id)
+    chatid = str(update.effective_chat.id)[4:]
     firstname = update.effective_user.first_name
-    messageid = f"https://t.me/c/{chatid[4:]}/{_messageid}"
+    messageid = f"https://t.me/c/{chatid}/{_messageid}"
 
-    zys = config.load_zy(uid)
+    # 为了和message中保持统一，chatid进行slice，也方便存储文件的时候不会出现报错。
+    zys = config.load_zy(chatid, uid)
 
     if not zys:
         # 首次交作业，初始化
@@ -62,7 +63,7 @@ def zy_cmd(update: Updater, context: CallbackContext):
                 "MESSAGEID": messageid
             }, ]
         }
-        config.save_zy(uid, zys)
+        config.save_zy(chatid, uid, zys)
 
     else:
         _zys = zys.setdefault("ZY", [])
@@ -74,16 +75,17 @@ def zy_cmd(update: Updater, context: CallbackContext):
 
         zys["ZY"] = _zys
 
-        config.save_zy(uid, zys)
+        config.save_zy(chatid, uid, zys)
 
     update.effective_message.reply_text("恭喜你提交作业成功~")
 
-
+@check_zy_chat
 def lzy_cmd(update: Updater, context: CallbackContext):
     """
     获取所有人当前，或者某个具体日子的作业。
     日期格式MMDD
     """
+
     _datetime = datetime.now().strftime("%m%d")
     if len(context.args) > 0:
         _datetime = context.args[0].strip()
@@ -91,7 +93,8 @@ def lzy_cmd(update: Updater, context: CallbackContext):
         update.effective_message.reply_text("命令格式输入错误，请使用 /lzy MMDD 的形式查询哦")
         return
 
-    all_zys = config.load_all_zy()
+    chatid = str(update.effective_chat.id)[4:]
+    all_zys = config.load_all_zy(chatid)
     result = []
     # print(all_zys)
     for uid, zy in all_zys.items():
@@ -105,12 +108,13 @@ def lzy_cmd(update: Updater, context: CallbackContext):
 
     update.effective_message.reply_text(res)
 
-
+@check_zy_chat
 def dzy_cmd(update: Updater, context: CallbackContext):
     uid = update.effective_user.id
     if utils.check_admin_permission(uid):
+        chatid = str(update.effective_chat.id)[4:]
         if len(context.args) == 1:
-            all_zys = config.load_all_zy()
+            all_zys = config.load_all_zy(chatid)
             messg = ""
             msgid = context.args[0]
             for uid, zy in all_zys.items():
@@ -119,7 +123,7 @@ def dzy_cmd(update: Updater, context: CallbackContext):
                     if mid == msgid:
                         messg += f"{uid}: {_zy['MESSAGEID']} 已经清除\n"
                         all_zys[uid]['ZY'].remove(_zy)
-            config._save_all_zy(all_zys)
+            config._save_all_zy(chatid, all_zys)
             if messg == "":
                 update.effective_message.reply_text("没有找到这个作业哦~")
             else:
@@ -127,6 +131,7 @@ def dzy_cmd(update: Updater, context: CallbackContext):
         else:
             update.effective_message.reply_text("请输入 /dzy [MMDD]")
 
+@check_zy_chat
 def kzy_cmd(update: Updater, context: CallbackContext):
     if len(context.args) > 0:
         uid = update.effective_user.id
@@ -140,7 +145,9 @@ def kzy_cmd(update: Updater, context: CallbackContext):
                 msg += f"{e}\n"
             update.effective_message.reply_text(msg)
             return
-    all_zys = config.load_all_zy()
+    
+    chatid = str(update.effective_chat.id)[4:]
+    all_zys = config.load_all_zy(chatid)
     zys = []
     for uid, zy in all_zys.items():
         uzy = f"{zy['FirstName']}[{uid}]:"
@@ -152,6 +159,7 @@ def kzy_cmd(update: Updater, context: CallbackContext):
     for zy in zys:
         rmsg += f"{zy}\n"
     update.effective_message.reply_text(rmsg)
+
 
 def add_dispatcher(dp: Dispatcher):
     # /zy 交作业

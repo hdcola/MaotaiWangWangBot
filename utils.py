@@ -1,6 +1,19 @@
-
+import functools
 
 import config
+
+
+def check_zy_chat(func):
+    @functools.wraps(func)
+    def decorator_check_zy_chat(*args, **kwargs):
+        update = args[0]
+        chatid = str(update.effective_chat.id)[4:]
+        valid_chats = config.get_zychats()
+        if chatid in valid_chats:
+            func(*args, **kwargs)
+        else:
+            update.effective_message.reply_text("此群暂时不支持交作业、查询作业、删除作业等操作哦")
+    return decorator_check_zy_chat
 
 
 def check_admin_permission(uid):
