@@ -155,7 +155,7 @@ def kzy_cmd(update: Updater, context: CallbackContext):
             uzy += f" {_zy['DATETIME']} "
         zys.append(uzy)
     
-    rmsg = "作业排行榜:\n"
+    rmsg = "作业爬行榜:\n"
     for zy in zys:
         rmsg += f"{zy}\n"
     update.effective_message.reply_text(rmsg)
