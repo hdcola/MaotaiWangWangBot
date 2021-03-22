@@ -34,7 +34,8 @@ if __name__ == '__main__':
     try:
         CONFIG = config.load_config()
     except FileNotFoundError:
-        print(f"config.json not found.Generate a new configuration file in {config.config_file}")
+        print(
+            f"config.json not found.Generate a new configuration file in {config.config_file}")
         config.set_default()
         sys.exit(2)
 
@@ -45,7 +46,8 @@ if __name__ == '__main__':
     CONFIG['ID'] = me.id
     CONFIG['Username'] = '@' + me.username
     config.set_default()
-    print(f"Starting... ID: {str(CONFIG['ID'])} , Username: {CONFIG['Username']}")
+    print(
+        f"Starting... ID: {str(CONFIG['ID'])} , Username: {CONFIG['Username']}")
 
     commands = []
     # 在这里加入功能
