@@ -7,7 +7,7 @@ def check_zy_chat(func):
     @functools.wraps(func)
     def decorator_check_zy_chat(*args, **kwargs):
         update = args[0]
-        chatid = str(update.effective_chat.id)[4:]
+        chatid = update.effective_chat.id
         valid_chats = config.get_zychats()
         if chatid in valid_chats:
             func(*args, **kwargs)
