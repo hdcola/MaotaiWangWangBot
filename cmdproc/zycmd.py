@@ -135,7 +135,7 @@ def dzy_cmd(update: Updater, context: CallbackContext):
             else:
                 update.effective_message.reply_text(messg)
         else:
-            update.effective_message.reply_text("请输入 /dzy [MMDD]")
+            update.effective_message.reply_text("请输入 /dzy [msgid]")
 
 
 @check_zy_chat
